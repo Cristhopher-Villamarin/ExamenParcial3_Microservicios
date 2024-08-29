@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  customers-service:
+    build: ./customers-service
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_USER=tu_usuario
+      - DB_PASSWORD=tu_contraseña
+      - DB_HOST=customers-db
+      - DB_PORT=5432
+      - DB_NAME=supermarket_customers
+    depends_on:
+      - customers-db
+    command: ["bash", "wait-for-it.sh", "customers-db:5432", "-t", "30", "--", "npm", "start"]
+
+    networks:
+      - supermarket-network
+
+  customers-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: tu_usuario
+      POSTGRES_PASSWORD: tu_contraseña
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - supermarket-network
+
+  sales-service:
+    build: ./sales-service
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_USER=tu_usuario
+      - DB_PASSWORD=tu_contraseña
+      - DB_HOST=sales-db
+      - DB_PORT=5432
+      - DB_NAME=supermarket_sales
+    depends_on:
+      - sales-db
+    command: ["bash", "wait-for-it.sh", "sales-db:5432", "-t", "30", "--", "npm", "start"]
+
+    networks:
+      - supermarket-network
+
+  sales-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: tu_usuario
+      POSTGRES_PASSWORD: tu_contraseña
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - supermarket-network
+
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "3003:3003"
+    environment:
+      - DB_USER=tu_usuario
+      - DB_PASSWORD=tu_contraseña
+      - DB_HOST=inventory-db
+      - DB_PORT=5432
+      - DB_NAME=supermarket_inventory
+    depends_on:
+      - inventory-db
+    command: ["bash", "wait-for-it.sh", "inventory-db:5432", "-t", "30", "--", "npm", "start"]
+
+    networks:
+      - supermarket-network
+
+  inventory-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: tu_usuario
+      POSTGRES_PASSWORD: tu_contraseña
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5434:5432"
+    networks:
+      - supermarket-network
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - customers-service
+      - sales-service
+      - inventory-service
+    command: ["bash", "wait-for-it.sh", "customers-service:3001", "--", "wait-for-it.sh", "sales-service:3002", "--", "wait-for-it.sh", "inventory-service:3003", "--", "npm", "start"]
+    networks:
+      - supermarket-network
+
+networks:
+  supermarket-network:
+    driver: bridge

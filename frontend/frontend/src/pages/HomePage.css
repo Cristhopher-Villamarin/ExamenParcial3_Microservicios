@@ -1,0 +1,59 @@
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://www.proyectosendo.es/wp-content/uploads/2020/01/shutterstock_386814034-1280x839-1024x671.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+h1 {
+
+  color: white;
+  font-size: 3rem;
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro para resaltar el texto */
+  border-radius: 10px; /* Bordes redondeados */
+  margin-bottom: 20px;
+}
+
+.nav-links {
+  list-style-type: none; /* Elimina los puntos */
+  padding: 0;
+}
+
+.nav-links li {
+  margin-bottom: 1rem;
+}
+
+.link-box {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  color: #22672c; /* Cambia el color del texto a blanco */
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.link-box:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Estilo del header */
+.header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: rgba(127, 117, 117, 0.7);
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 1.5rem;
+}
